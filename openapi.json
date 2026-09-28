@@ -1,0 +1,171 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+      "title": "Praktikum API - Blog",
+      "description": "Dokumentasi API BREAD (Browse, Read, Edit, Add, Delete) untuk data Blog.",
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "http://praktikum-api.test/api",
+        "description": "Server lokal"
+      }
+    ],
+    "tags": [
+      { "name": "Blog", "description": "Operasi BREAD pada data blog" }
+    ],
+    "paths": {
+      "/blogs": {
+        "get": {
+          "tags": ["Blog"],
+          "summary": "B (Browse) - Menampilkan semua blog",
+          "responses": {
+            "200": {
+              "description": "Daftar blog berhasil ditampilkan",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "array",
+                        "items": { "$ref": "#/components/schemas/Blog" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": ["Blog"],
+          "summary": "A (Add) - Menambahkan blog baru",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/BlogInput" }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Blog berhasil ditambahkan",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": { "type": "string" },
+                      "data": { "$ref": "#/components/schemas/Blog" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/blog/{id}": {
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID blog",
+            "schema": { "type": "integer" },
+            "example": 1
+          }
+        ],
+        "get": {
+          "tags": ["Blog"],
+          "summary": "R (Read) - Menampilkan detail blog berdasarkan id",
+          "responses": {
+            "200": {
+              "description": "Detail blog berhasil ditampilkan",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": { "type": "string" },
+                      "data": { "$ref": "#/components/schemas/Blog" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "put": {
+          "tags": ["Blog"],
+          "summary": "E (Edit) - Mengubah blog berdasarkan id",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/BlogInput" }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Blog berhasil diubah",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "delete": {
+          "tags": ["Blog"],
+          "summary": "D (Delete) - Menghapus blog berdasarkan id",
+          "responses": {
+            "200": {
+              "description": "Blog berhasil dihapus",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "Blog": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "integer", "example": 1 },
+            "title": { "type": "string", "example": "Belajar Laravel" },
+            "content": { "type": "string", "nullable": true, "example": "Membuat REST API sederhana" },
+            "created_at": { "type": "string", "format": "date-time" },
+            "updated_at": { "type": "string", "format": "date-time" }
+          }
+        },
+        "BlogInput": {
+          "type": "object",
+          "required": ["title"],
+          "properties": {
+            "title": { "type": "string", "example": "Belajar Laravel" },
+            "content": { "type": "string", "example": "Membuat REST API sederhana" }
+          }
+        }
+      }
+    }
+}
