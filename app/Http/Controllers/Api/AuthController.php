@@ -34,6 +34,7 @@ class AuthController extends Controller
         $data = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required', 'string'],
+            'mode' =>['string']
         ]);
 
         $user = User::where('email', $data['email'])->first();
@@ -45,11 +46,20 @@ class AuthController extends Controller
             ]);
         }
 
-        $token = $user->createToken('demo-api')->plainTextToken;
+        $mode = $data['mode'] ?? 'read';
+        $abilities = match ($mode) {
+            'read' => ['blogs:read'],
+            'edit' => ['blogs:read', 'blogs:update'],
+            'delete' => ['blogs:read', 'blogs:delete'],
+            'manage' => ['blogs:read', 'blogs:update', 'blogs:create', 'blogs:delete'],
+        };
+
+        $token = $user->createToken("blog-{$mode}", $abilities)->plainTextToken;
 
         return response()->json([
             'token_type' => 'Bearer',
             'token' => $token,
+            'abilities' => $abilities,
         ]);
     }
 
